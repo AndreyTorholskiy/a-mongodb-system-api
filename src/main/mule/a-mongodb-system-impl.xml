@@ -13,8 +13,27 @@ http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mo
 	</sub-flow>
 	<sub-flow name="getCountryWeatherFromDB" doc:id="83396fff-64df-4e22-b2a0-2505c32d0137" >
 		<set-variable value="#[attributes.queryParams.country]" doc:name="country" doc:id="3a06d348-4e6b-4430-a838-493dd48fa5ad" variableName="country"/>
+		<ee:transform doc:name="Query" doc:id="9e05973f-d476-4f08-b9ea-30a6e8c2751a" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="query" ><![CDATA[%dw 2.0
+output application/json
+---
+{"country": vars.country}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
 		<mongo:find-documents collectionName="weather" doc:name="Find Country Weather" doc:id="9b15cde7-4486-40ad-b66f-969db30ee9e9" config-ref="MongoDB_Config" fields=','>
-			<mongo:query ><![CDATA[#[{"country": vars.country}]]]></mongo:query>
+			<mongo:query ><![CDATA[#[vars.query]]]></mongo:query>
+
 		</mongo:find-documents>
+		<ee:transform doc:name="Preapare Response" doc:id="a85c4c68-cd97-435a-bf2b-bc2654dc6ac1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload[0] - "_id"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 </mule>
