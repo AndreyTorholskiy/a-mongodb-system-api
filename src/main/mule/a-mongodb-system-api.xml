@@ -25,9 +25,9 @@
         <apikit:console config-ref="a-mongodb-system-api-config" />
     </flow>
     <flow name="get:\country-weather:a-mongodb-system-api-config">
-		<flow-ref doc:name="getCountryWeatherFromDB" doc:id="9ed7ea31-2ce1-46b5-990f-803e8dc99fa0" name="getCountryWeatherFromDB" />
+        <flow-ref doc:name="getCountryWeatherFromDB" doc:id="9ed7ea31-2ce1-46b5-990f-803e8dc99fa0" name="getCountryWeatherFromDB" />
     </flow>
-    <flow name="post:\country-weather:a-mongodb-system-api-config">
-		<flow-ref doc:name="saveCountryWeatherToDB" doc:id="95883e81-ea7b-402a-9bc3-8fb293f8e534" name="saveCountryWeatherToDB" />
+    <flow name="post:\country-weather:application\json:a-mongodb-system-api-config">
+        <flow-ref doc:name="saveCountryWeatherToDB" doc:id="95883e81-ea7b-402a-9bc3-8fb293f8e534" name="saveCountryWeatherToDB" />
     </flow>
 </mule>
