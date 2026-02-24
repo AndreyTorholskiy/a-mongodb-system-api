@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<sub-flow name="saveCountryWeatherToDB" doc:id="eefd0d9b-41e8-48b6-b152-3162519309bb" >
-		<ee:transform doc:name="Query" doc:id="3da1670f-e052-41cf-9c57-f0a2dbdaf339">
+		<ee:transform doc:name="query" doc:id="3da1670f-e052-41cf-9c57-f0a2dbdaf339">
 			<ee:message />
 			<ee:variables>
 				<ee:set-variable variableName="query"><![CDATA[%dw 2.0
@@ -30,8 +30,8 @@ payload]]></ee:set-payload>
 		</ee:transform>
 	</sub-flow>
 	<sub-flow name="getCountryWeatherFromDB" doc:id="83396fff-64df-4e22-b2a0-2505c32d0137" >
-		<set-variable value="#[attributes.queryParams.country]" doc:name="country" doc:id="f0a152ff-6658-4b1b-a8a7-0a43a5049f8e" variableName="country"/>
-		<ee:transform doc:name="Query" doc:id="9e05973f-d476-4f08-b9ea-30a6e8c2751a" >
+		<set-variable value='#[attributes.queryParams.country default ""]' doc:name="country" doc:id="f0a152ff-6658-4b1b-a8a7-0a43a5049f8e" variableName="country"/>
+		<ee:transform doc:name="query" doc:id="9e05973f-d476-4f08-b9ea-30a6e8c2751a" >
 			<ee:variables >
 				<ee:set-variable variableName="query" ><![CDATA[%dw 2.0
 output application/json
