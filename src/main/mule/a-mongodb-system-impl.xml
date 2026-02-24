@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd">
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<sub-flow name="saveCountryWeatherToDB" doc:id="eefd0d9b-41e8-48b6-b152-3162519309bb" >
-		<set-variable value="#[attributes.queryParams.city]" doc:name="city" doc:id="8c80d23d-2dfd-4a75-bab1-f8d928e2f9d8" variableName="city"/>
-		<mongo:update-documents collectionName="weather" doc:name="Update documents" doc:id="d3baf536-43bf-4b98-9922-262ba2627baf" config-ref="MongoDB_Config" upsert="true">
-			<mongo:query ><![CDATA[#[{"capital.city": vars.city}]]]></mongo:query>
+		<ee:transform doc:name="Query" doc:id="3da1670f-e052-41cf-9c57-f0a2dbdaf339">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="query"><![CDATA[%dw 2.0
+output application/json
+var city = payload.capital.city
+---
+{"capital.city": city}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<mongo:update-documents collectionName="weather" doc:name="Update documents" doc:id="d3baf536-43bf-4b98-9922-262ba2627baf" config-ref="MongoDB_Config" upsert="true" target="updatedValue">
+			<mongo:query ><![CDATA[#[vars.query]]]></mongo:query>
 		</mongo:update-documents>
+		<ee:transform doc:name="Updated Record Response" doc:id="084e9828-2a64-49fd-bfb4-5bcc01880a4b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="getCountryWeatherFromDB" doc:id="83396fff-64df-4e22-b2a0-2505c32d0137" >
-		<set-variable value="#[attributes.queryParams.country]" doc:name="country" doc:id="3a06d348-4e6b-4430-a838-493dd48fa5ad" variableName="country"/>
+		<set-variable value="#[attributes.queryParams.country]" doc:name="country" doc:id="f0a152ff-6658-4b1b-a8a7-0a43a5049f8e" variableName="country"/>
 		<ee:transform doc:name="Query" doc:id="9e05973f-d476-4f08-b9ea-30a6e8c2751a" >
-			<ee:message >
-			</ee:message>
 			<ee:variables >
 				<ee:set-variable variableName="query" ><![CDATA[%dw 2.0
 output application/json
@@ -25,14 +41,15 @@ output application/json
 		</ee:transform>
 		<mongo:find-documents collectionName="weather" doc:name="Find Country Weather" doc:id="9b15cde7-4486-40ad-b66f-969db30ee9e9" config-ref="MongoDB_Config" fields=','>
 			<mongo:query ><![CDATA[#[vars.query]]]></mongo:query>
-
 		</mongo:find-documents>
+		<validation:is-not-empty-collection doc:name="Is Country Weather found" doc:id="725d7c7e-2c80-4ef3-8bb1-61fb4c13aec1" message='#["The country: $(vars.country) was not found"]'/>
 		<ee:transform doc:name="Preapare Response" doc:id="a85c4c68-cd97-435a-bf2b-bc2654dc6ac1" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
+var removeIdField = "_id"
 ---
-payload[0] - "_id"]]></ee:set-payload>
+payload[0] - removeIdField]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
