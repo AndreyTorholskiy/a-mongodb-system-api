@@ -6,10 +6,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="87cb79cd-979d-4a8a-a82f-d78384c31954" file="config\local-properties.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="87cb79cd-979d-4a8a-a82f-d78384c31954" file="config/${env}-properties.yaml" />
     <apikit:config name="a-mongodb-system-api-config" api="a-mongodb-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<mongo:config name="MongoDB_Config" doc:name="MongoDB Config" doc:id="6d120a17-ea95-40ff-944d-882219c62fb2" >
 		<mongo:connection-string-connection connectionString="${db.connectionUrl}" />
 	</mongo:config>
+	<global-property doc:name="Global Property" doc:id="8abc6020-6c24-40db-9970-21cbd0028f5f" name="env" value="local" />
 
 </mule>

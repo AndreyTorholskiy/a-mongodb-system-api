@@ -8,7 +8,7 @@ types:
   Error: !include datatypes/Error.raml
 
 traits:
-  QueryParameter:
+  SearchFilter:
     queryParameters:
       country:
         displayName: Country
@@ -53,6 +53,7 @@ traits:
  
 /country-weather:
   post:
+    displayName: Publish country weather
     description: Save information about weather to DB
     is: [ErrorResponse]
     body:
@@ -61,13 +62,13 @@ traits:
         example: !include examples/country-weather-example.json
     responses:
       201:
-       body:
-        application/json:
-          type: CountryWeather
-          example: !include examples/country-weather-example.json
+        body:
+          application/json:
+            type: CountryWeather
+            example: !include examples/country-weather-example.json
   get:
     description: Get information about country weather
-    is: [QueryParameter, ErrorResponse]
+    is: [SearchFilter, ErrorResponse]
     responses:
       200:
         body:
