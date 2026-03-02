@@ -10,7 +10,9 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="a-mongodb-system-api-config" />
+        <flow-ref doc:name="initialRequestLogging" doc:id="73ea0f9f-e1a1-4292-9461-71d54a9bc400" name="initialRequestLogging" />
+		<apikit:router config-ref="a-mongodb-system-api-config" />
+		<flow-ref doc:name="finalLoggerMessage" doc:id="e3a6f7ff-d803-4a38-a525-38ab30de4ea1" name="finalLoggerMessage" />
     </flow>
     <flow name="a-mongodb-system-api-console">
         <http:listener path="${http.listener.basePath}/console/*" config-ref="HTTP_Domain_Listener_config">

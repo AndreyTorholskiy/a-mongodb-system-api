@@ -12,5 +12,7 @@ http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mo
 		<mongo:connection-string-connection connectionString="${db.connectionUrl}" />
 	</mongo:config>
 	<global-property doc:name="Global Property" doc:id="8abc6020-6c24-40db-9970-21cbd0028f5f" name="env" value="local" />
-
+	<import doc:name="Import" doc:id="1946697c-84b8-45cc-9107-1bbc83e766f2" file="a-error-common.xml" />
+	<configuration doc:name="Configuration" doc:id="b8f9e755-04f5-49dc-8c49-58b09bdec1d3" defaultErrorHandler-ref="a-globalError_Handler" />
+	<import doc:name="Import" doc:id="c12750eb-6654-4758-9763-f66c12194043" file="a-logging-common.xml"/>
 </mule>
