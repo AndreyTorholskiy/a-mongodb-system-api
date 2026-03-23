@@ -11,8 +11,8 @@
             </http:error-response>
         </http:listener>
         <flow-ref doc:name="initialRequestLogging" doc:id="73ea0f9f-e1a1-4292-9461-71d54a9bc400" name="initialRequestLogging" />
-		<apikit:router config-ref="a-mongodb-system-api-config" />
-		<flow-ref doc:name="finalLoggerMessage" doc:id="e3a6f7ff-d803-4a38-a525-38ab30de4ea1" name="finalLoggerMessage" />
+        <apikit:router config-ref="a-mongodb-system-api-config" />
+        <flow-ref doc:name="finalLoggerMessage" doc:id="e3a6f7ff-d803-4a38-a525-38ab30de4ea1" name="finalLoggerMessage" />
     </flow>
     <flow name="a-mongodb-system-api-console">
         <http:listener path="${http.listener.basePath}/console/*" config-ref="HTTP_Domain_Listener_config">
@@ -31,5 +31,7 @@
     </flow>
     <flow name="post:\country-weather:application\json:a-mongodb-system-api-config">
         <flow-ref doc:name="saveCountryWeatherToDB" doc:id="95883e81-ea7b-402a-9bc3-8fb293f8e534" name="saveCountryWeatherToDB" />
+    </flow>
+    <flow name="post:\dead-letter:application\json:a-mongodb-system-api-config">
     </flow>
 </mule>

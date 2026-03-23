@@ -75,3 +75,19 @@ traits:
           application/json:
             type: CountryWeather
             example: !include examples/country-weather-example.json
+            
+/dead-letter:
+  post:
+    displayName: Publish failed message
+    description: Save failed message to DB
+    is: [ErrorResponse]
+    body:
+      application/json:
+        type:
+        example:
+    responses:
+      201:
+        body:
+          application/json:
+            type: 
+            example: 
