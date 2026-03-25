@@ -33,5 +33,6 @@
         <flow-ref doc:name="saveCountryWeatherToDB" doc:id="95883e81-ea7b-402a-9bc3-8fb293f8e534" name="saveCountryWeatherToDB" />
     </flow>
     <flow name="post:\dead-letter:application\json:a-mongodb-system-api-config">
+        <flow-ref doc:name="saveDeadLetterToDB" doc:id="870436e9-b044-4987-aa37-bc4381f5f2ea" name="saveDeadLetterToDB" />
     </flow>
 </mule>
