@@ -101,4 +101,31 @@ payload[0] - removeIdField]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
+	<sub-flow name="saveDeadLetterToDB" doc:id="f49aca23-3554-4d68-b5af-aa60688d42af" >
+		<ee:transform doc:name="Logger Message: Flow Start" doc:id="a788f19c-1c45-421a-ad9e-0a2d3bd98f72" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Save Dead Letter to DB request"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="auditLogging" doc:id="33f20137-e1eb-4410-a32c-0b3e37cad056" name="auditLogging" />
+		<mongo:insert-document doc:name="Insert Dead Letter" doc:id="b8d3a47b-6f95-471a-9e5c-1547a5868f06" config-ref="MongoDB_Config" collectionName="error-weather" target="insertedMessage"/>
+		<ee:transform doc:name="Logger Message: DB Response" doc:id="3ca9bbfa-cf33-41bf-a55a-6793cf994540" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    message: "Save Dead Letter: DB updated",
+    insertedDocument: payload
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
 </mule>
