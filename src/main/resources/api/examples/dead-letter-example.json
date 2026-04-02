@@ -1,0 +1,34 @@
+{
+  "metadata": {
+    "retryCount": 2,
+    "deathQueue": "country.city.queue",
+    "deathExchange": "country.city.topic",
+    "deathReason": "rejected",
+    "correlationId": "ab3f4633-e39c-443b-a007-1af4addeba4f",
+    "appName": "a-country-weather-process-api"
+  },
+  "errorMessage": {
+    "errorType": "APP:CONNECTIVITY",
+    "errorMessage": "An error occurred.",
+    "timestamp": "2026-04-01T12:47:18.098Z"
+  },
+  "payload": {
+    "country": "Lithuania",
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "currencies": {
+      "EUR": {
+        "name": "euro",
+        "symbol": "€"
+      }
+    },
+    "languages": {
+      "lit": "Lithuanian"
+    },
+    "population": 2894886,
+    "countryCode": "LT",
+    "capital": {
+      "city": "Capital"
+    }
+  }
+}

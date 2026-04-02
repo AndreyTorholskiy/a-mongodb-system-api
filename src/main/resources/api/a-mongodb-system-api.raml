@@ -83,7 +83,11 @@ traits:
     is: [ErrorResponse]
     body:
       application/json:
+        type: object
+        example: !include examples/dead-letter-example.json
     responses:
       201:
         body:
           application/json:
+            type: object
+            example: !include examples/dead-letter-example.json
