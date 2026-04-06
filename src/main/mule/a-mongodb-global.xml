@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
-	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="87cb79cd-979d-4a8a-a82f-d78384c31954" file="config/${env}-properties.yaml" />
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
     <apikit:config name="a-mongodb-system-api-config" api="a-mongodb-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<mongo:config name="MongoDB_Config" doc:name="MongoDB Config" doc:id="6d120a17-ea95-40ff-944d-882219c62fb2" >
-		<mongo:connection-string-connection connectionString="${db.connectionUrl}" />
+		<mongo:connection-string-connection connectionString="${secure::db.connectionUrl}" />
 	</mongo:config>
 	<global-property doc:name="Global Property" doc:id="8abc6020-6c24-40db-9970-21cbd0028f5f" name="env" value="local" />
 	<import doc:name="Import error handling" doc:id="1946697c-84b8-45cc-9107-1bbc83e766f2" file="a-error-common.xml" />
 	<configuration doc:name="Configuration" doc:id="b8f9e755-04f5-49dc-8c49-58b09bdec1d3" defaultErrorHandler-ref="a-globalError_Handler" />
 	<import doc:name="Import common logging" doc:id="c12750eb-6654-4758-9763-f66c12194043" file="a-logging-common.xml"/>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c1b0f40b-1af9-4101-9637-235126f6617c" file="config/${env}-properties.yaml" key="${secure.key}">
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="791ad12e-8e28-4a09-b04d-667e963e2431" file="config/${env}-properties.yaml" />
 </mule>
