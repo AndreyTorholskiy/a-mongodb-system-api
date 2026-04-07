@@ -1,0 +1,94 @@
+#%RAML 1.0
+title: a-mongodb-system-api
+version: v1
+mediaType: application/json
+
+types:
+  CountryWeather: !include datatypes/CountryWeather.raml
+  SavedCountryWeather: !include datatypes/SavedCountryWeather.raml
+  Error: !include datatypes/Error.raml
+
+traits:
+  SearchFilter:
+    queryParameters:
+      country:
+        displayName: Country
+        description: Name of the country
+        type: string
+        required: true
+      city:
+        displayName: City
+        description: City of current country
+        type: string
+        required: false
+  ErrorResponse:
+    responses:
+      400:
+        body:
+          type: Error
+          example: !include examples/errors/400.json
+      404:
+        body:
+          type: Error
+          example: !include examples/errors/404.json
+      405:
+        body:
+          type: Error
+          example: !include examples/errors/405.json
+      406:
+        body:
+          type: Error
+          example: !include examples/errors/406.json            
+      415:
+        body:
+          type: Error
+          example: !include examples/errors/415.json
+      500:
+        body:
+          type: Error
+          example: !include examples/errors/500.json
+      501:
+        body:
+          type: Error
+          example: !include examples/errors/501.json            
+ 
+/country-weather:
+  post:
+    displayName: Publish country weather
+    description: Save information about weather to DB
+    is: [ErrorResponse]
+    body:
+      application/json:
+        type: CountryWeather
+        example: !include examples/country-weather-example.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: SavedCountryWeather
+            example: !include examples/success-db-update-response.json
+  get:
+    description: Get information about country weather
+    is: [SearchFilter, ErrorResponse]
+    responses:
+      200:
+        body:
+          application/json:
+            type: CountryWeather
+            example: !include examples/country-weather-example.json
+            
+/dead-letter:
+  post:
+    displayName: Publish failed message
+    description: Save failed message to DB
+    is: [ErrorResponse]
+    body:
+      application/json:
+        type: object
+        example: !include examples/dead-letter-example.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: object
+            example: !include examples/dead-letter-example.json

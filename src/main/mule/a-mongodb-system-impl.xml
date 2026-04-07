@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="saveCountryWeatherToDB" doc:id="eefd0d9b-41e8-48b6-b152-3162519309bb" >
+		<ee:transform doc:name="Logger Message: Flow Start" doc:id="b9e57add-68b2-484d-ba7f-c66387c30b59">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Save Country Weather to DB request"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="auditLogging" doc:id="ed7bb23d-7367-40d8-9688-3c1be564d6a2" name="auditLogging"/>
+		<ee:transform doc:name="query" doc:id="3da1670f-e052-41cf-9c57-f0a2dbdaf339">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="query"><![CDATA[%dw 2.0
+output application/json
+var country = payload.country
+---
+{"country": country}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<mongo:update-documents collectionName="weather" doc:name="Update documents" doc:id="d3baf536-43bf-4b98-9922-262ba2627baf" config-ref="MongoDB_Config" upsert="true" target="updatedValue">
+			<mongo:query ><![CDATA[#[vars.query]]]></mongo:query>
+		</mongo:update-documents>
+		<ee:transform doc:name="Logger Message: DB Response" doc:id="f1b4ec7a-a161-46f9-815a-f093bb9b05d5">
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    message: "Save Country Weather: DB updated",
+    upsertedDocument: payload
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
+output application/json
+---
+{
+    message: "Save Country Weather: DB updated",
+    upsertedDocument: payload
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="getCountryWeatherFromDB" doc:id="83396fff-64df-4e22-b2a0-2505c32d0137" >
+		<ee:transform doc:name="Logger Message: Flow Start" doc:id="07e55de5-6948-4f4b-90e6-25d9d5089e63">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Get Country Weather request"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="auditLogging" doc:id="915bf1e4-cab8-4ca6-9c3a-421b25907fde" name="auditLogging"/>
+		<set-variable value='#[attributes.queryParams.country as String]' doc:name="country" doc:id="f0a152ff-6658-4b1b-a8a7-0a43a5049f8e" variableName="country"/>
+		<ee:transform doc:name="query" doc:id="9e05973f-d476-4f08-b9ea-30a6e8c2751a" >
+			<ee:variables >
+				<ee:set-variable variableName="query" ><![CDATA[%dw 2.0
+output application/json
+---
+{"country": vars.country}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<mongo:find-documents collectionName="weather" doc:name="Find Country Weather" doc:id="9b15cde7-4486-40ad-b66f-969db30ee9e9" config-ref="MongoDB_Config" fields=','>
+			<mongo:query ><![CDATA[#[vars.query]]]></mongo:query>
+		</mongo:find-documents>
+		<validation:is-not-empty-collection doc:name="Is Country Weather found" doc:id="725d7c7e-2c80-4ef3-8bb1-61fb4c13aec1" message='#["The country: $(vars.country) was not found"]'/>
+		<ee:transform doc:name="Logger Message: DB Response" doc:id="f69001ef-e0f4-45ff-8b96-c0c40ce6ad93">
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var removeIdField = "_id"
+var document = payload[0] default {}
+---
+document - removeIdField]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
+output application/json
+---
+{
+    message: "Get Country Weather: DB response",
+    requestedCountry: vars.country
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="saveDeadLetterToDB" doc:id="f49aca23-3554-4d68-b5af-aa60688d42af" >
+		<ee:transform doc:name="Logger Message: Flow Start" doc:id="a788f19c-1c45-421a-ad9e-0a2d3bd98f72" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Save Dead Letter to DB request"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="auditLogging" doc:id="33f20137-e1eb-4410-a32c-0b3e37cad056" name="auditLogging" />
+		<mongo:insert-document doc:name="Insert Dead Letter" doc:id="b8d3a47b-6f95-471a-9e5c-1547a5868f06" config-ref="MongoDB_Config" collectionName="error-weather" target="insertedMessage"/>
+		<ee:transform doc:name="Logger Message: DB Response" doc:id="3ca9bbfa-cf33-41bf-a55a-6793cf994540" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    message: "Save Dead Letter: DB saved",
+    insertedDocument: payload
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    message: "Save Dead Letter: DB saved",
+    insertedDocument: payload
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+</mule>

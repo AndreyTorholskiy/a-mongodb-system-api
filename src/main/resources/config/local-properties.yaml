@@ -1,0 +1,8 @@
+version: "v1"
+
+http:
+  listener:
+    basePath: "/a-mongodb-sa/api/${version}"      
+
+db:
+  connectionUrl: "![eL56BD2Ol4T3TtFhasmmryL1O8WOktatHnDxTOd/Yp9ug3UzNUHB0m7cEMt5FqsfzdNYZTzXXFSeMjV/ekzPJ3itxzlvVTIbM8Po2FBdw9ss57M7aV2+N9sPvXa8VbCY]"
