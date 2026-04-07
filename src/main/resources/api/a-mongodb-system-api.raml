@@ -5,6 +5,7 @@ mediaType: application/json
 
 types:
   CountryWeather: !include datatypes/CountryWeather.raml
+  SavedCountryWeather: !include datatypes/SavedCountryWeather.raml
   Error: !include datatypes/Error.raml
 
 traits:
@@ -64,8 +65,8 @@ traits:
       201:
         body:
           application/json:
-            type: CountryWeather
-            example: !include examples/country-weather-example.json
+            type: SavedCountryWeather
+            example: !include examples/success-db-update-response.json
   get:
     description: Get information about country weather
     is: [SearchFilter, ErrorResponse]
