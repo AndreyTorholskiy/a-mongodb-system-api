@@ -321,4 +321,6 @@ type auto_f49aca23_3554_4d68_b5af_aa60688d42af_Output_Variables_outboundHeaders 
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#f69001ef-e0f4-45ff-8b96-c0c40ce6ad93"/>
+  <types:enrichment select="#3ca9bbfa-cf33-41bf-a55a-6793cf994540"/>
 </types:mule>

@@ -1,0 +1,40 @@
+{
+    "message": "Save Country Weather: DB updated",
+    "upsertedDocument": {
+        "capital": {
+            "city": "Dnipro",
+            "longitude": 18.3564,
+            "latitude": 43.8486,
+            "seaLevel": 1021,
+            "weatherConditions": {
+                "visibility": 10000,
+                "temperature": {
+                    "degrees": "Celsius",
+                    "current": 8.95,
+                    "max": 8.95,
+                    "min": 8.95
+                }
+            },
+            "sunrise": 1771824835,
+            "sunset": 1771863982,
+            "weatherOn": "2025-01-24T17:53:11.833Z"
+        },
+        "country": "Ukraine",
+        "countryCode": "UA",
+        "currencies": {
+            "BAM": {
+                "name": "Bosnia and Herzegovina convertible mark",
+                "symbol": "KM"
+            }
+        },
+        "languages": {
+            "bos": "Bosnian",
+            "hrv": "Croatian",
+            "srp": "Serbian"
+        },
+        "population": 3422000,
+        "region": "Europe",
+        "subregion": "Southeast Europe",
+        "timezone": 3600
+    }
+}
