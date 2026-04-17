@@ -6,6 +6,7 @@ mediaType: application/json
 types:
   CountryWeather: !include datatypes/CountryWeather.raml
   SavedCountryWeather: !include datatypes/SavedCountryWeather.raml
+  DeadLetter: !include datatypes/DeadLetter.raml
   Error: !include datatypes/Error.raml
 
 traits:
@@ -84,7 +85,7 @@ traits:
     is: [ErrorResponse]
     body:
       application/json:
-        type: object
+        type: DeadLetter
         example: !include examples/dead-letter-example.json
     responses:
       201:
