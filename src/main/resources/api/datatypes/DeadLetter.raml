@@ -1,0 +1,50 @@
+#%RAML 1.0 DataType
+displayName: Dead Letter
+description: Letter with errors to save into DB
+
+type: object
+properties:
+  metadata:
+    displayName: Metadata
+    description: Information about message
+    type: object
+    properties:
+      retryCount:
+        displayName: Retry Count
+        description: Number of processing attempts
+        type: integer
+      deathQueue:
+        displayName: Death Queue
+        description: Name of the queue where the message failed
+        type: string
+      deathExchange:
+        displayName: Death Exchange
+        description: Name of the exchange
+        type: string
+      deathReason:
+        displayName: Death Reason
+        description: Reason why the message was dead-lettered
+        type: string
+      correlationId:
+        displayName: Correlation ID
+        description: Unique identifier for tracing
+        type: string
+      appName:
+        displayName: App Name
+        description: Name of the application that produced the error
+        type: string
+  errorMessage:
+    displayName: Error Message
+    description: Details about the occurred error
+    type: object
+    properties:
+      errorType:
+        type: string
+      errorMessage:
+        type: string
+      timestamp:
+        type: datetime
+  payload:
+    displayName: Payload
+    description: The original message body
+    type: object
